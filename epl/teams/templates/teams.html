@@ -1,0 +1,4 @@
+{% extends 'index.html' %} {% load static %} {% block content %}
+<h5>teams</h5>
+
+{% for team in all_teams %} {{team.teamname}} {% endfor %} {% endblock content%}
