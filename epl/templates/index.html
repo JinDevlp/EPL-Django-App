@@ -9,7 +9,7 @@
     />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dev World</title>
+    <title>EPL</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <link
       rel="stylesheet"
@@ -42,9 +42,7 @@
     {%bootstrap_messages %}
   </head>
   <body class="d-flex flex-column h-100">
-    {% block content %}
-    <main class="bg-dark flex-shrink-0"></main>
-    {% endblock content %}
+    {% include 'navbar.html' %} {% block content %} {% endblock content %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"

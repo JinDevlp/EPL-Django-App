@@ -1,7 +1,6 @@
 {% extends 'index.html' %} {% load static %} {% block content %}
-{% for team in all_teams %} {{team.teamnumber}} {% endfor %}
-<section class="py-3">
-    <div class="container px-4 px-lg-5 my-3">
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
       <div class="row gx-4 gx-lg-5">
         <div class="col-md-7">
           <table class="table">
@@ -16,13 +15,13 @@
                 <th scope="col">Points</th>
               </tr>
             </thead>
-            <h5>Leaderboard</h5>
+            <h5>EPL Leaderboard</h5>
             {% for stat in all_stats %}
             <tbody>
-                <tr class="clickable">
+              <tr class="clickable-row" data-href="{% url 'team' stat.team.teamnumber %}">
                   <td>{{stat.position}}</td>
-
                   <td>
+                      <a class="text-decoration-none" href="{% url 'team' stat.team.teamnumber%}">
                     <img
                       class="rounded-circle"
                       style="
@@ -35,6 +34,7 @@
                       src="{{stat.team.crest}}"
                       alt="..."
                     />{{stat.team.teamname}}
+                  </a>
                   </td>
                   <td>{{stat.playedgames}}</td>
                   <td>{{stat.won}}</td>
@@ -42,8 +42,8 @@
                   <td>{{stat.lost}}</td>
                   <td>{{stat.points}}</td>
                 </tr>
-              </a>
             </tbody>
+          </a>
             {% endfor %}
           </table>
         </div>
@@ -58,12 +58,16 @@
               </tr>
             </thead>
             <tbody>
+              {% for player in all_players%}
+              {% if player.top_scorer == True %}
               <tr class="table-active">
-                <td>Player</td>
-                <td>Team</td>
-                <td>Goals</td>
-                <td>Assists</td>
+                <td>{{player.name}}</td>
+                <td>{{player.team.teamname}}</td>
+                <td>{{player.goals}}</td>
+                <td>{{player.assists}}</td>
               </tr>
+              {% endif %}
+              {% endfor %}
             </tbody>
           </table>
         </div>

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'teams',
     'player',
+    'match',
 
     "bootstrap5",
 

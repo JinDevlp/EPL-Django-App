@@ -1,0 +1,52 @@
+{% extends 'index.html' %} {% load static %} {% block content %}
+<section class="py-3">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5">
+      <div class="col-md-7">
+        <section id="scroll">
+          <div class="container px-5">
+            <div class="row gx-5 align-items-center">
+              <div class="col-lg-6 order-lg-2">
+                <div class="p-5">
+                  {% for team in target_team%}
+                  <img
+                    class="img-fluid rounded-circle"
+                    src="{{team.crest}}"
+                    alt="..."
+                  />
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div>
+                  <h2 class="display-6">{{team.teamname}}</h2>
+                  <p>Coach:{{team.coach}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Position</th>
+              <th scope="col">Nationality</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for player in players %}
+            <!-- d -->
+            {% if player.team.teamname == team.teamname %}
+            <tr class="clickable">
+              <td>{{player.name}}</td>
+              <td>{{player.position}}</td>
+              <td>{{player.nationality}}</td>
+            </tr>
+            {% endif %} {%endfor%} {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content%}

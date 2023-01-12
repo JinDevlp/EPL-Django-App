@@ -33,3 +33,4 @@ class LeaderBoard(models.Model):
     def __int__(self):
         return (self.position)
 
+
