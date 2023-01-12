@@ -51,20 +51,9 @@ def home(request):
                 nationality = l['nationality'],
                 team = Team.objects.get(teamnumber = teams_data.teamnumber)
                 )
-
-    # for l in squads:
-    #     player_data =Player(
-    #         code = l['id'],
-    #         name = l['name'],
-    #         position = l['position'],
-    #         dateofbirth = l['dateOfBirth'],
-    #         nationality = l['nationality'],
-    #         team = Team.objects.get(teamnumber = teams_data.teamnumber)
-    #     )
             if not Player.objects.filter(code=player_data.code).exists():
                 player_data.save()
 
-    # board json
     board_response = requests.get(board, headers=headers)
     total_data = board_response.json()
     positions = total_data['standings'][0]['table']
