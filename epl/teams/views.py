@@ -27,21 +27,22 @@ def home(request):
 
     for i  in teams:
         squads = i['squad']
-        teams_data = Team(
-            areacode = i['area']['id'],
-            teamnumber = i['id'],
-            teamname = i['name'],
-            shortname = i['shortName'],
-            tla = i['tla'],
-            crest = i['crest'],
-            website = i['website'],
-            clubColors = i['clubColors'],
-            coach = i['coach']['name'],
-        )
-        if not Team.objects.filter(teamnumber=teams_data.teamnumber).exists():
-            teams_data.save()
-            print(teams_data)
         for l in squads:
+            teams_data = Team(
+                areacode = i['area']['id'],
+                teamnumber = i['id'],
+                teamname = i['name'],
+                shortname = i['shortName'],
+                tla = i['tla'],
+                crest = i['crest'],
+                website = i['website'],
+                clubColors = i['clubColors'],
+                coach = i['coach']['name'],
+            )
+            if not Team.objects.filter(teamnumber=teams_data.teamnumber).exists():
+                teams_data.save()
+                print(teams_data)
+
             player_data =Player(
                 code = l['id'],
                 name = l['name'],
@@ -49,7 +50,7 @@ def home(request):
                 dateofbirth = l['dateOfBirth'],
                 nationality = l['nationality'],
                 team = Team.objects.get(teamnumber = teams_data.teamnumber)
-            )
+                )
 
     # for l in squads:
     #     player_data =Player(
@@ -60,8 +61,8 @@ def home(request):
     #         nationality = l['nationality'],
     #         team = Team.objects.get(teamnumber = teams_data.teamnumber)
     #     )
-        if not Player.objects.filter(code=player_data.code).exists():
-            player_data.save()
+            if not Player.objects.filter(code=player_data.code).exists():
+                player_data.save()
 
     # board json
     board_response = requests.get(board, headers=headers)
