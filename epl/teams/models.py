@@ -19,7 +19,7 @@ class Team(models.Model):
 
 class LeaderBoard(models.Model):
     position = models.IntegerField( blank=True, null=True )
-    team = models.OneToOneField(Team, on_delete=models.CASCADE, null=True, blank=True,related_name="lbteam")
+    team = models.OneToOneField(Team, on_delete=models.CASCADE, null=True, blank=True)
     playedgames = models.IntegerField( blank=True, null=True )
     form = models.CharField(max_length=255, blank=True, null=True )
     won = models.IntegerField( blank=True, null=True )

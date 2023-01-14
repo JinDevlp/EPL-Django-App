@@ -36,37 +36,31 @@
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>#</th>
-                        <th>Name</th>
+                        <th>utcDate</th>
                         <th>Status</th>
-                        <th>Date</th>
-                        <th>Price</th>
+                        <th>MatchDay</th>
+                        <th>HomeTeam</th>
+                        <th>AwayTeam</th>
+                        <th>Winner</th>
+                        <th>Score</th>
                       </tr>
                     </thead>
                     <tbody>
+                      {% for match in all_matches %}
+                      <!-- sda -->
                       <tr>
-                        <th scope="row">1</th>
-                        <td>Kolor Tea Shirt For Man</td>
-                        <td><span class="badge badge-primary">Sale</span></td>
-                        <td>January 22</td>
-                        <td class="color-primary">$21.56</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Kolor Tea Shirt For Women</td>
-                        <td><span class="badge badge-success">Tax</span></td>
-                        <td>January 30</td>
-                        <td class="color-success">$55.32</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Blue Backpack For Baby</td>
+                        <td>{{match.utcDate}}</td>
+                        <td>{{match.status}}</td>
+                        <td>{{match.matchday}}</td>
+                        <td>{{match.homeTeam}}</td>
+                        <td>{{match.awayTeam}}</td>
+                        <td>{{match.final_score.winner}}</td>
                         <td>
-                          <span class="badge badge-danger">Extended</span>
+                          {{match.final_score.fulltime_home}}:
+                          {{match.final_score.fulltime_away}}
                         </td>
-                        <td>January 25</td>
-                        <td class="color-danger">$14.85</td>
                       </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
                 </div>

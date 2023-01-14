@@ -1,6 +1,5 @@
 from django.shortcuts import render,redirect
 
-from django.core.exceptions import ObjectDoesNotExist
 import itertools
 
 from .models import Team, LeaderBoard
