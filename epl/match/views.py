@@ -10,7 +10,7 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 # Create your views here.
-def viewMatches(request,*args):
+def viewMatches(request):
     url = 'http://api.football-data.org/v4/competitions/PL/matches?season=2022'
     headers = { 'X-Auth-Token': env('TOKEN') }
     # matches json
@@ -20,7 +20,7 @@ def viewMatches(request,*args):
 
     for i in matches_list:
         if i['score']['winner']== 'HOME_TEAM':
-            score_data = Score(
+            Score.objects.update_or_create(
                 matchid = i['id'],
                 winner = Team.objects.get(teamnumber=i['homeTeam']['id'] ),
                 fulltime_home = i['score']['fullTime']['home'],
@@ -28,11 +28,9 @@ def viewMatches(request,*args):
                 halftime_home = i['score']['halfTime']['home'],
                 halftime_away =i['score']['halfTime']['away']
             )
-            if not Score.objects.filter(matchid=i['id']).exists():
-                score_data.save()
 
         elif i['score']['winner']== 'AWAY_TEAM':
-            score_data = Score(
+            Score.objects.update_or_create(
             matchid = i['id'],
             winner = Team.objects.get(teamnumber=i['awayTeam']['id'] ),
             fulltime_home = i['score']['fullTime']['home'],
@@ -40,11 +38,9 @@ def viewMatches(request,*args):
             halftime_home = i['score']['halfTime']['home'],
             halftime_away =i['score']['halfTime']['away']
             )
-            if not Score.objects.filter(matchid=i['id']).exists():
-                score_data.save()
 
         elif i['score']['winner']== 'DRAW':
-            score_data = Score(
+            Score.objects.update_or_create(
             matchid = i['id'],
             winner = None,
             fulltime_home = i['score']['fullTime']['home'],
@@ -52,11 +48,9 @@ def viewMatches(request,*args):
             halftime_home = i['score']['halfTime']['home'],
             halftime_away =i['score']['halfTime']['away']
             )
-            if not Score.objects.filter(matchid=i['id']).exists():
-                score_data.save()
 
         elif i['score']['winner']== 'null':
-            score_data = Score(
+            Score.objects.update_or_create(
             matchid = i['id'],
             winner = None,
             fulltime_home = i['score']['fullTime']['home'],
@@ -64,11 +58,9 @@ def viewMatches(request,*args):
             halftime_home = i['score']['halfTime']['home'],
             halftime_away =i['score']['halfTime']['away']
             )
-            if not Score.objects.filter(matchid=i['id']).exists():
-                score_data.save()
 
         elif i['status'] == 'POSTPONED' or i['status'] == 'SCHEDULED' or i['status'] == 'TIMED':
-            score_data = Score(
+            Score.objects.update_or_create(
             matchid = i['id'],
             winner = None,
             fulltime_home = i['score']['fullTime']['home'],
@@ -76,22 +68,16 @@ def viewMatches(request,*args):
             halftime_home = i['score']['halfTime']['home'],
             halftime_away =i['score']['halfTime']['away']
             )
-            if not Score.objects.filter(matchid=i['id']).exists():
-                score_data.save()
 
-
-        match_data = Match(
+        Match.objects.update_or_create(
             code = i['id'],
             utcDate = i['utcDate'],
             status = i['status'],
             matchday = i['matchday'],
             homeTeam = Team.objects.get(teamnumber=i['homeTeam']['id'] ),
             awayTeam = Team.objects.get(teamnumber=i['awayTeam']['id'] ),
-            final_score = Score.objects.get(matchid = score_data.matchid)
+            final_score = Score.objects.get(matchid = i['id'])
             )
-
-        if not Match.objects.filter(code=match_data.code).exists():
-            match_data.save()
 
         all_scores = Score.objects.all()
         all_matches = Match.objects.all().order_by('utcDate')

@@ -24,3 +24,8 @@ in progress 01/10/2023
 - Django Web Application
 - Django REST API
 - API
+
+## Problems I faced
+
+- Had trouble with Game outcomes. I found out that Null and Draw values were a thing for some games.
+- The matches were not updating and I fixed it by using update_or_create and update for Objects.
