@@ -24,6 +24,18 @@ in progress 01/10/2023
 - Django Web Application
 - Django REST API
 - API
+- (MODEL OBJECTS) -Serialization-> (PYTHON DICTIONARY) -Render into Json-> (JSON DATA)
+- (JSON DATA) -ParseData-> (PYTHON NATIVE DATATYPE) -DeSerialization-> (COMPLEX DATATYPE)
+- '''
+  "GET": "/api/teams"
+  "GET": "/api/teams/teamnumber"
+  "GET": "/api/matches"
+  "GET": "/api/matches/code"
+  "GET": "/api/leaderboard"
+  "GET": "/api/top-scorer"
+  "GET": "/api/players"
+  "GET": "/api/players/code"
+  '''
 
 ## Problems I faced
 

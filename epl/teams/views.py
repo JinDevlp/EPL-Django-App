@@ -1,7 +1,6 @@
 from django.shortcuts import render,redirect
 
-import itertools
-
+from django.http import JsonResponse
 from .models import Team, LeaderBoard
 from player.models import Player
 
@@ -63,6 +62,7 @@ def home(request):
                 )
             if not Player.objects.filter(code=player_data.code).exists():
                 player_data.save()
+
             elif Player.objects.filter(code=player_data.code).exists():
                 Player.objects.filter(code=player_data.code).update(
                     code = l['id'],
@@ -72,6 +72,7 @@ def home(request):
                     nationality = l['nationality'],
                     team = Team.objects.get(teamnumber = teams_data.teamnumber)
                     )
+
     # top scorers json
     topPlayers_response = requests.get(top_players,headers=headers)
     scorers_data = topPlayers_response.json()
@@ -119,15 +120,19 @@ def home(request):
                 goalsagainst = i['goalsAgainst'],
                 goalsdifference = i['goalDifference']
             )
-        all_stats = LeaderBoard.objects.all().order_by('position')
-        all_players = Player.objects.all().order_by('-goals')
-        all_teams = Team.objects.all()
-    return render(request, 'home.html',{'all_stats':all_stats,'all_teams':all_teams,'all_players':all_players})
+
+    all_stats = LeaderBoard.objects.all().order_by('position')
+    all_players = Player.objects.all().order_by('-goals')
+    all_teams = Team.objects.all()
+
+
+    return render(request, 'teams/home.html',{'all_stats':all_stats,'all_teams':all_teams,'all_players':all_players})
 
 
 def viewTeam(request,pk):
-    target_team = Team.objects.filter(teamnumber=pk)
+    target_team = Team.objects.get(teamnumber=pk)
     players = Player.objects.all().order_by()
 
-    return render(request, 'team.html',{'target_team':target_team,'players':players})
+
+    return render(request, 'teams/team.html',{'target_team':target_team,'players':players})
 

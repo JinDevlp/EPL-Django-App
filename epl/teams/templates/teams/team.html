@@ -8,18 +8,17 @@
             <div class="row gx-5 align-items-center">
               <div class="col-lg-6 order-lg-2">
                 <div class="p-5">
-                  {% for team in target_team%}
                   <img
                     class="img-fluid rounded-circle"
-                    src="{{team.crest}}"
+                    src="{{target_team.crest}}"
                     alt="..."
                   />
                 </div>
               </div>
               <div class="col-lg-6">
                 <div>
-                  <h2 class="display-6">{{team.teamname}}</h2>
-                  <p>Coach:{{team.coach}}</p>
+                  <h2 class="display-6">{{target_team.teamname}}</h2>
+                  <p>Coach:{{target_team.coach}}</p>
                 </div>
               </div>
             </div>
@@ -31,18 +30,24 @@
               <th scope="col">Name</th>
               <th scope="col">Position</th>
               <th scope="col">Nationality</th>
+              <th scope="col">Goals</th>
             </tr>
           </thead>
           <tbody>
             {% for player in players %}
             <!-- d -->
-            {% if player.team.teamname == team.teamname %}
+            {% if player.team.teamname == target_team.teamname %}
             <tr class="clickable">
               <td>{{player.name}}</td>
               <td>{{player.position}}</td>
               <td>{{player.nationality}}</td>
+              {% if player.top_scorer is True %}
+              <td class="">{{player.goals}} (Top Scorer)</td>
+              {% else %}
+              <td class="">{{player.goals}}</td>
+              {% endif %}
             </tr>
-            {% endif %} {%endfor%} {% endfor %}
+            {% endif %} {%endfor%}
           </tbody>
         </table>
       </div>

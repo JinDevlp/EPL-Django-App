@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'match',
 
     "bootstrap5",
+    'rest_framework',
 
 
 ]

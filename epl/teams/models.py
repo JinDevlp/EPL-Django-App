@@ -3,15 +3,15 @@ from django.db import models
 
 
 class Team(models.Model):
-    areacode = models.CharField(max_length=255, blank=True, null=True )
-    teamnumber = models.CharField(unique=True,max_length=255, blank=True, null=True )
-    teamname = models.CharField(max_length=255, blank=True, null=True )
-    shortname = models.CharField(max_length=255, blank=True, null=True )
-    tla = models.CharField(max_length=255, blank=True, null=True )
-    crest = models.CharField(max_length=255, blank = True, null = True)
-    website = models.CharField(max_length=255, blank = True, null = True)
-    clubColors = models.CharField(max_length=255, blank = True, null = True)
-    coach = models.CharField(max_length=255, blank = True, null = True)
+    areacode = models.CharField(max_length=255, blank=True )
+    teamnumber = models.CharField(unique=True,max_length=255, blank=True)
+    teamname = models.CharField(max_length=255, blank=True )
+    shortname = models.CharField(max_length=255, blank=True )
+    tla = models.CharField(max_length=255, blank=True )
+    crest = models.CharField(max_length=255, blank = True)
+    website = models.CharField(max_length=255, blank = True)
+    clubColors = models.CharField(max_length=255, blank = True)
+    coach = models.CharField(max_length=255, blank = True)
 
 
     def __str__(self):
@@ -21,7 +21,7 @@ class LeaderBoard(models.Model):
     position = models.IntegerField( blank=True, null=True )
     team = models.OneToOneField(Team, on_delete=models.CASCADE, null=True, blank=True)
     playedgames = models.IntegerField( blank=True, null=True )
-    form = models.CharField(max_length=255, blank=True, null=True )
+    form = models.CharField(max_length=255, blank=True)
     won = models.IntegerField( blank=True, null=True )
     draw = models.IntegerField( blank=True, null=True )
     lost = models.IntegerField( blank=True, null=True )
