@@ -3,6 +3,7 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from .models import Team, LeaderBoard
 from player.models import Player
+from match.models import Match
 
 import requests
 
@@ -131,8 +132,8 @@ def home(request):
 
 def viewTeam(request,pk):
     target_team = Team.objects.get(teamnumber=pk)
-    players = Player.objects.all().order_by()
+    players = Player.objects.all()
+    matches = Match.objects.all()
 
-
-    return render(request, 'teams/team.html',{'target_team':target_team,'players':players})
+    return render(request, 'teams/team.html',{'target_team':target_team,'players':players,'matches':matches})
 

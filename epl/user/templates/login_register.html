@@ -1,0 +1,67 @@
+{% extends 'index.html' %} {% load bootstrap5 %} {% load static %}
+<!-- dsa -->
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="card border-0 shadow rounded-3 my-5">
+        {% if page == "register" %}
+        <!-- Register -->
+        <div class="card-body p-4 p-sm-5">
+          <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
+          <form action="{% url 'register' %}" method="POST">
+            {% csrf_token %} {% bootstrap_form form %}
+            <div class="d-grid">
+              <button
+                class="btn btn-primary text-uppercase fw-bold"
+                type="submit"
+              >
+                Register
+              </button>
+            </div>
+          </form>
+          <hr class="my-4" />
+          <a
+            class="small text-decoration-none text-white"
+            href="{%url 'login'%}"
+          >
+            <div class="d-grid mb-2">
+              <button class="btn text-uppercase fw-bold" type="submit">
+                Already have an Account?
+              </button>
+            </div>
+          </a>
+        </div>
+        {% elif page == "login" %}
+        <!-- Login -->
+        <div class="card-body p-4 p-sm-5">
+          <h5 class="card-title text-center mb-5 fw-light fs-5">Log In</h5>
+          <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %} {% bootstrap_form form %}
+            <div class="d-grid">
+              <button
+                class="btn btn-primary btn-login text-uppercase fw-bold"
+                type="submit"
+              >
+                Log In
+              </button>
+            </div>
+          </form>
+          <hr class="my-4" />
+          <a
+            class="small text-decoration-none text-white"
+            href="{%url 'register'%}"
+          >
+            <div class="d-grid mb-2">
+              <button class="btn text-uppercase fw-bold">
+                Don't have an Account?
+              </button>
+            </div>
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

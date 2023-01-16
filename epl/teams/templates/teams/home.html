@@ -1,11 +1,27 @@
-{% extends 'index.html' %} {% load static %} {% block content %}
+{% extends 'index.html' %}{% load bootstrap5 %} {% load static %}{% block content %}
 <section class="py-5">
-    <div class="container px-4 px-lg-5 my-5">
+    <div class="container my-5">
       <div class="row gx-4 gx-lg-5">
         <div class="col-md-7">
-          <table class="table">
+          <section class="features-icons bg-light text-center">
+            <div class="container px-5">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                            <div class="features-icons-icon d-flex"><i class="bi-window m-auto text-primary"></i></div>
+                            <h3>Team Name</h3>
+                            <p class="lead mb-0">This theme will look great on any device, no matter the size!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+          <table class="table table-bordered">
             <thead>
-              <tr>
+              <tr class="text-center">
+                <th>
+                  WatchList
+                </th>
                 <th scope="col">Position</th>
                 <th scope="col">Team</th>
                 <th scope="col">Played</th>
@@ -18,22 +34,29 @@
             <h5>EPL Leaderboard</h5>
             {% for stat in all_stats %}
             <tbody>
-              <tr class="clickable-row" data-href="{% url 'team' stat.team.teamnumber %}">
+              <tr class=" text-center py-2 align-items-center">
+                <td>
+                  <form method="post" id="team-form">
+                    {% csrf_token %}
+                    <input type="radio" value="{{stat.team}}"  name="team" id="team" required>
+                    <button type="submit">Save</button>
+                </form></td>
                   <td>{{stat.position}}</td>
-                  <td>
+                  <td class="text-center">
                       <a class="text-decoration-none" href="{% url 'team' stat.team.teamnumber%}">
-                    <img
-                      class="rounded-circle"
-                      style="
-                        width: 50px;
-                        height: 50px;
-                        border-radius: 50%;
-                        position: relative;
-                        overflow: hidden;
-                      "
-                      src="{{stat.team.crest}}"
-                      alt="..."
-                    />{{stat.team.teamname}}
+                        <div class="text-center py-2"><img
+                          class="rounded-circle"
+                          style="
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 50%;
+                            position: relative;
+                            overflow: hidden;
+                          "
+                          src="{{stat.team.crest}}"
+                          alt="..."
+                        /></div>
+                    {{stat.team.teamname}}
                   </a>
                   </td>
                   <td>{{stat.playedgames}}</td>
@@ -48,7 +71,7 @@
           </table>
         </div>
         <div class="col-md-4">
-          <table class="table table-hover">
+          <table class="table table-bordered">
             <thead>
               <tr>
                 <th scope="col">Player</th>
@@ -57,12 +80,25 @@
                 <th scope="col">Assists</th>
               </tr>
             </thead>
+            <h5>Top Scorers</h5>
             <tbody>
               {% for player in all_players%}
               {% if player.top_scorer == True %}
-              <tr class="table-active">
+              <tr class="">
                 <td>{{player.name}}</td>
-                <td>{{player.team.teamname}}</td>
+                <td class="text-center">
+                  <a class="text-decoration-none" href="{% url 'team' player.team.teamnumber%}">
+                  <div class="text-center py-2"><img
+                    class="rounded-circle"
+                    style="
+                      width: 25px;
+                      height: 25px;
+                      border-radius: 50%;
+
+                    "
+                    src="{{player.team.crest}}"
+                    alt="..."
+                  /></div>{{player.team.shortname}}</a></td>
                 <td>{{player.goals}}</td>
                 <td>{{player.assists}}</td>
               </tr>
@@ -74,4 +110,21 @@
       </div>
     </div>
   </section>
+    <script>
+      $(document).ready(
+        $('#team-form').submit(function(e){
+          e.preventDefault();
+          var serializedData = $(this).serialize();
+
+          $.ajax({
+            type:"POST",
+            url: "{% url 'home' %}",
+            data:  serializedData,
+            success: function(data){
+              $("#result").text(data["result"]);
+            }
+          });
+        })
+      );
+      </script>
  {% endblock content%}

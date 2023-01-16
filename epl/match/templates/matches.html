@@ -26,12 +26,12 @@
       <!-- /# row -->
       <section id="main-content">
         <div class="row justify-content-center">
-          <div class="col-lg-6">
+          <div class="col-lg-10">
             <div class="card">
-              <div class="card-title">
+              <div class="card-title text-center">
                 <h4>Matches</h4>
               </div>
-              <div class="card-body">
+              <div class="card-body text-center">
                 <div class="table-responsive">
                   <table class="table">
                     <thead>
@@ -48,16 +48,72 @@
                     <tbody>
                       {% for match in all_matches %}
                       <!-- sda -->
-                      <tr>
+                      <tr class="my-2">
                         <td>{{match.utcDate}}</td>
                         <td>{{match.status}}</td>
                         <td>{{match.matchday}}</td>
-                        <td>{{match.homeTeam}}</td>
-                        <td>{{match.awayTeam}}</td>
-                        <td>{{match.final_score.winner}}</td>
+                        <td class="text-center">
+                          <h5>{{match.homeTeam.shortname}}</h5>
+                          <div class="my-3">
+                            <img
+                              class="rounded-circle"
+                              style="
+                                width: 50px;
+                                height: 50px;
+                                border-radius: 50%;
+                              "
+                              src="{{match.homeTeam.crest}}"
+                              alt="..."
+                            />
+                          </div>
+                        </td>
                         <td>
-                          {{match.final_score.fulltime_home}}:
-                          {{match.final_score.fulltime_away}}
+                          <h5>{{match.awayTeam.shortname}}</h5>
+                          <div class="my-3">
+                            <img
+                              class="rounded-circle"
+                              style="
+                                width: 50px;
+                                height: 50px;
+                                border-radius: 50%;
+                                position: relative;
+                                overflow: hidden;
+                              "
+                              src="{{match.awayTeam.crest}}"
+                              alt="..."
+                            />
+                          </div>
+                        </td>
+                        <td>
+                          {% if match.final_score.winner is not None %}
+                          <h5>{{match.final_score.winner}}</h5>
+                          <div class="my-3">
+                            <img
+                              class="rounded-circle"
+                              style="
+                                width: 50px;
+                                height: 50px;
+                                border-radius: 50%;
+                                position: relative;
+                                overflow: hidden;
+                              "
+                              src="{{match.final_score.winner.crest}}"
+                              alt="..."
+                            />
+                          </div>
+                          {% elif match.final_score.winner is None %}
+                          <p>N/A</p>
+                          {% endif %}
+                        </td>
+                        <td>
+                          {% if match.final_score.fulltime_home is None %}
+                          <p>N/A</p>
+                          {% else %}
+                          <h4>
+                            {{match.final_score.fulltime_home}}:
+                            {{match.final_score.fulltime_away}}
+                          </h4>
+                          {% endif %}
                         </td>
                       </tr>
                       {% endfor %}

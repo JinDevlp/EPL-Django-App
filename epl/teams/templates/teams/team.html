@@ -2,7 +2,7 @@
 <section class="py-3">
   <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5">
-      <div class="col-md-7">
+      <div class="col-md-6">
         <section id="scroll">
           <div class="container px-5">
             <div class="row gx-5 align-items-center">
@@ -15,7 +15,7 @@
                   />
                 </div>
               </div>
-              <div class="col-lg-6">
+              <div class="col-lg-4">
                 <div>
                   <h2 class="display-6">{{target_team.teamname}}</h2>
                   <p>Coach:{{target_team.coach}}</p>
@@ -44,10 +44,143 @@
               {% if player.top_scorer is True %}
               <td class="">{{player.goals}} (Top Scorer)</td>
               {% else %}
-              <td class="">{{player.goals}}</td>
+              <td class="">N/A</td>
               {% endif %}
             </tr>
             {% endif %} {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-4">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>utcDate</th>
+              <th>Status</th>
+              <th>MatchDay</th>
+              <th>HomeTeam</th>
+              <th>AwayTeam</th>
+              <th>Winner</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for match in matches %}
+            <tr class="text-center">
+              <!-- dsa -->
+              {% if match.awayTeam.teamnumber == target_team.teamnumber %}
+              <td>{{match.utcDate}}</td>
+              <td>{{match.status}}</td>
+              <td>{{match.matchday}}</td>
+              <td>
+                <div class="text-center py-2">
+                  <img
+                    class="rounded-circle"
+                    style="width: 50px; height: 50px; border-radius: 50%"
+                    src="{{match.homeTeam.crest}}"
+                    alt="..."
+                  />
+                </div>
+                {{match.homeTeam}}
+              </td>
+              <td class="">
+                <div class="text-center py-2">
+                  <img
+                    class="rounded-circle"
+                    style="width: 50px; height: 50px; border-radius: 50%"
+                    src="{{match.awayTeam.crest}}"
+                    alt="..."
+                  />
+                </div>
+                {{match.awayTeam}}
+              </td>
+              {% if match.status == "FINISHED" %}
+              <td>
+                {% if match.final_score.winner == None%}
+                <h4>Draw</h4>
+                {% else %}
+                <div class="text-center py-2">
+                  <img
+                    class="rounded-circle"
+                    style="width: 50px; height: 50px; border-radius: 50%"
+                    src="{{match.final_score.winner.crest}}"
+                    alt="..."
+                  />
+                </div>
+                {{match.final_score.winner}} {% endif %}
+              </td>
+              <td>
+                {{match.final_score.fulltime_home}}:{{match.final_score.fulltime_away}}
+              </td>
+              {% elif match.status == "POSTPONED" %}
+              <td>
+                <h4>Postponed</h4>
+              </td>
+              <td>Postponed</td>
+              {% elif match.status == "TIMED" or match.status == "SCHEDULED" %}
+              <td>
+                <p>Scheduled: {{match.utcDate}}</p>
+              </td>
+              <td>N/A</td>
+              {% endif %}
+              <!-- dsa -->
+              {% elif match.homeTeam.teamnumber == target_team.teamnumber %}
+              <td>{{match.utcDate}}</td>
+              <td>{{match.status}}</td>
+              <td>{{match.matchday}}</td>
+              <td>
+                <div class="text-center py-2">
+                  <img
+                    class="rounded-circle"
+                    style="width: 50px; height: 50px; border-radius: 50%"
+                    src="{{match.homeTeam.crest}}"
+                    alt="..."
+                  />
+                </div>
+                {{match.homeTeam}}
+              </td>
+              <td>
+                <div class="text-center py-2">
+                  <img
+                    class="rounded-circle"
+                    style="width: 50px; height: 50px; border-radius: 50%"
+                    src="{{match.awayTeam.crest}}"
+                    alt="..."
+                  />
+                </div>
+                {{match.awayTeam}}
+              </td>
+              {% if match.status == "FINISHED" %}
+              <td>
+                {% if match.final_score.winner == None%}
+                <h4>Draw</h4>
+                {% else %}
+                <div class="text-center py-2">
+                  <img
+                    class="rounded-circle"
+                    style="width: 50px; height: 50px; border-radius: 50%"
+                    src="{{match.final_score.winner.crest}}"
+                    alt="..."
+                  />
+                </div>
+                {{match.final_score.winner}} {% endif %}
+              </td>
+              <td>
+                {{match.final_score.fulltime_home}}:{{match.final_score.fulltime_away}}
+              </td>
+              {% elif match.status == "POSTPONED" %}
+              <td>
+                <p>Postponed</p>
+              </td>
+              <td>N/A</td>
+              {% elif match.status == "TIMED" or match.status == "SCHEDULED" %}
+              <td>
+                <p>Scheduled: {{match.utcDate}}</p>
+              </td>
+              <td>N/A</td>
+              {% endif %} {% endif %}
+            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
