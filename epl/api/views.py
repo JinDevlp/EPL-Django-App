@@ -1,10 +1,11 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from teams.models import Team, LeaderBoard
+from user.models import Profile
 from player.models import Player
 from match.models import Match
-from .serializers import TeamSerializer,TeamInfoSerializer,PlayerSerializer, LeaderBoardSerializer, TopScorerSerializer,MatchSerializer
+from .serializers import TeamSerializer,TeamInfoSerializer,PlayerSerializer, LeaderBoardSerializer, TopScorerSerializer,MatchSerializer, ProfileSerializer
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -20,8 +21,28 @@ def getRoutes(request):
 
         {'GET': '/api/players'},
         {'GET': '/api/players/code'},
+
+        {'GET': '/api/profiles'},
+        {'GET': '/api/profiles/<str:pk>'},
+
+        {'POST': '/api/profiles/<str:pk>/teams/teamnumber/add'},
+
     ]
     return Response(routes)
+
+@api_view(['GET'])
+def viewProfiles(request):
+    profiles = Profile.objects.all()
+
+    profile_serializer = ProfileSerializer(profiles,many=True)
+    return Response(profile_serializer.data)
+
+@api_view(['GET'])
+def viewProfile(request,pk):
+    profile = Profile.objects.get(id=pk)
+
+    profile_serializer = ProfileSerializer(profile,many=False)
+    return Response(profile_serializer.data)
 
 @api_view(['GET'])
 def viewTeams(request):
@@ -75,3 +96,12 @@ def viewMatch(request,pk):
     matches = Match.objects.get(code=pk)
     serializer = MatchSerializer(matches,many=False)
     return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addFavTeam(request,pk):
+   profile = Profile.objects.get(id=pk)
+   profile_serializer = ProfileSerializer(profile,many=False)
+
+   return Response(profile_serializer.data)
+

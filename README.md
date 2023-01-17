@@ -27,7 +27,8 @@ in progress 01/10/2023
 - API
 - (MODEL OBJECTS) -Serialization-> (PYTHON DICTIONARY) -Render into Json-> (JSON DATA)
 - (JSON DATA) -ParseData-> (PYTHON NATIVE DATATYPE) -DeSerialization-> (COMPLEX DATATYPE)
-- '''
+
+```
   "GET": "/api/teams"
   "GET": "/api/teams/teamnumber"
   "GET": "/api/matches"
@@ -36,7 +37,7 @@ in progress 01/10/2023
   "GET": "/api/top-scorer"
   "GET": "/api/players"
   "GET": "/api/players/code"
-  '''
+```
 
 ## Problems I faced
 

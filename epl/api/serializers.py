@@ -3,11 +3,25 @@ from rest_framework.validators import UniqueValidator
 from teams.models import Team, LeaderBoard
 from player.models import Player
 from match.models import Match, Score
+from django.contrib.auth.models import User
+from user.models import Profile
 
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
+        fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'email', 'username', 'password']
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+    fav_team = TeamSerializer(many=False)
+    class Meta:
+        model = Profile
         fields = '__all__'
 
 class PlayerSerializer(serializers.ModelSerializer):

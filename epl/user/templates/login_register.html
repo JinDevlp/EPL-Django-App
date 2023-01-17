@@ -12,12 +12,11 @@
           <form action="{% url 'register' %}" method="POST">
             {% csrf_token %} {% bootstrap_form form %}
             <div class="d-grid">
-              <button
-                class="btn btn-primary text-uppercase fw-bold"
+              <input
+                class="btn btn-lg rounded-pill border btn-login text-uppercase text-white fw-bold mb-2"
                 type="submit"
-              >
-                Register
-              </button>
+                value="Register"
+              />
             </div>
           </form>
           <hr class="my-4" />
@@ -37,14 +36,34 @@
         <div class="card-body p-4 p-sm-5">
           <h5 class="card-title text-center mb-5 fw-light fs-5">Log In</h5>
           <form action="{% url 'login' %}" method="POST">
-            {% csrf_token %} {% bootstrap_form form %}
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="floatingInput"
+                placeholder="username"
+                name="username"
+              />
+              <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input
+                type="password"
+                class="form-control"
+                id="floatingPassword"
+                placeholder="Password"
+                name="password"
+              />
+              <label for="floatingPassword">Password</label>
+            </div>
+
             <div class="d-grid">
-              <button
-                class="btn btn-primary btn-login text-uppercase fw-bold"
+              <input
+                class="btn btn-lg rounded-pill border btn-login text-uppercase text-white fw-bold mb-2"
                 type="submit"
-              >
-                Log In
-              </button>
+                value="Login"
+              />
             </div>
           </form>
           <hr class="my-4" />

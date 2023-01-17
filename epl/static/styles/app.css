@@ -5,3 +5,7 @@
 .navbar a {
   color: white;
 }
+
+.btn-login {
+  background-color: #82aae3 !important;
+}

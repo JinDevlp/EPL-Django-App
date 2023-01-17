@@ -15,5 +15,10 @@ urlpatterns = [
     path('matches/', views.viewMatches),
     path('matches/<str:pk>', views.viewMatch),
 
+    path('profiles/', views.viewProfiles),
+    path('profiles/<str:pk>', views.viewProfile),
+
+    path('profiles/<str:pk>/favteam/add/',views.addFavTeam),
+
 ]
 

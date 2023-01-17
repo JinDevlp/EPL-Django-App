@@ -8,6 +8,7 @@ from .models import Profile
 from .forms import CustomUserForm ,CustomLoginForm, ProfileForm, FavTeamForm
 from django.contrib import messages
 from teams.models import Team
+from rest_framework.authtoken.models import Token
 # Create your views here.
 
 def login(request):
@@ -59,6 +60,8 @@ def register(request):
             user.username = user.username.lower()
 
             user.save()
+            user_token = Token.objects.create(user=user)
+            print(user_token.key)
             messages.success(request, 'User created')
 
             auth_login(request, user)
