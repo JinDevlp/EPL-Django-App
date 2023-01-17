@@ -17,7 +17,8 @@ in progress 01/10/2023
 - I love soccer so much and keep up with English Premier League. So I wanted to get the EPL information with public API
 - Information from API will be saved or updated in database
 - Models: Players, Teams, Matches, Scores
-- I will build REST
+- Built RESTful APIs
+- Users can register/login and save their Favorite Team
 
 ## Functionality
 

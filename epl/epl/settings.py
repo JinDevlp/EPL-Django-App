@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'teams',
-    'player',
+    'teams.apps.TeamsConfig',
+    'player.apps.PlayerConfig',
     'match.apps.MatchConfig',
     'user.apps.UserConfig',
 

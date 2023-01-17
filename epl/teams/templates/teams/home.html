@@ -3,25 +3,59 @@
     <div class="container my-5">
       <div class="row gx-4 gx-lg-5">
         <div class="col-md-7">
-          <section class="features-icons bg-light text-center">
-            <div class="container px-5">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
-                            <div class="features-icons-icon d-flex"><i class="bi-window m-auto text-primary"></i></div>
-                            <h3>Team Name</h3>
-                            <p class="lead mb-0">This theme will look great on any device, no matter the size!</p>
+          {% if request.user.profile.fav_team %}
+          <section class="bg-light">
+            <div class="container m-2">
+                <div class="row justify-content-center text-center m-2">
+                    <div class="col-lg-4 text-center">
+                        <div class="text-center m-3">
+                          <h3>My Favorite Team</h3>
+                          <a href="{% url 'team' request.user.profile.fav_team.teamnumber %}" class="text-decoration-none">
+                            <div class="text-center">
+                              <img
+                              class="rounded-circle"
+                              style="
+                              width: 50px;
+                              height: 50px;
+                              border-radius: 50%;
+                              position: relative;
+                              overflow: hidden;
+                              "
+                              src="{{request.user.profile.fav_team.crest}}"
+                              alt="..."
+                              />
+                              <h4>{{request.user.profile.fav_team.teamname}} </h4>
+                            </div>
+                          </a>
+                            <div class="py-2">
+                              <form method="POST" action="{% url 'home' %}" name="remove">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{request.user.profile.fav_team}}"  name="remove">
+                                <button type="submit" value="{{request.user.profile.fav_team}}"  name="remove">Remove<i class="fa-solid fa-trash"></i></button>
+                              </form>
+                              <div class="py-2">
+                                <a href="{{request.user.profile.fav_team.website}}" class="text-decoration-none">
+                                  <p>{{request.user.profile.fav_team}}'s Website</p>
+                                </a>
+                              </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        {% endif %}
+        <div class="text-center py-3">
+          <h5>EPL Leaderboard</h5>
+        </div>
           <table class="table table-bordered">
             <thead>
               <tr class="text-center">
+                {% if request.user.profile.fav_team is None %}
                 <th>
-                  WatchList
+                  Add My Team
                 </th>
+                {% endif %}
                 <th scope="col">Position</th>
                 <th scope="col">Team</th>
                 <th scope="col">Played</th>
@@ -31,16 +65,18 @@
                 <th scope="col">Points</th>
               </tr>
             </thead>
-            <h5>EPL Leaderboard</h5>
             {% for stat in all_stats %}
             <tbody>
               <tr class=" text-center py-2 align-items-center">
+                {% if request.user.profile.fav_team is None %}
                 <td>
-                  <form method="post" id="team-form">
+                  <form method="POST" action="{% url 'home' %}" name="fav_team">
                     {% csrf_token %}
-                    <input type="radio" value="{{stat.team}}"  name="team" id="team" required>
-                    <button type="submit">Save</button>
-                </form></td>
+                    <input type="hidden" value="{{stat.team}}"  name="fav_team">
+                    <button type="submit" value="{{stat.team}}"  name="fav_team">Add</button>
+                </form>
+              </td>
+              {% endif %}
                   <td>{{stat.position}}</td>
                   <td class="text-center">
                       <a class="text-decoration-none" href="{% url 'team' stat.team.teamnumber%}">
@@ -110,21 +146,4 @@
       </div>
     </div>
   </section>
-    <script>
-      $(document).ready(
-        $('#team-form').submit(function(e){
-          e.preventDefault();
-          var serializedData = $(this).serialize();
-
-          $.ajax({
-            type:"POST",
-            url: "{% url 'home' %}",
-            data:  serializedData,
-            success: function(data){
-              $("#result").text(data["result"]);
-            }
-          });
-        })
-      );
-      </script>
  {% endblock content%}

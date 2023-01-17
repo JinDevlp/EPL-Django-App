@@ -1,9 +1,11 @@
 from django.shortcuts import render,redirect
-
+from django.contrib import messages
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .models import Team, LeaderBoard
 from player.models import Player
 from match.models import Match
+from user.models import Profile
 
 import requests
 
@@ -122,10 +124,36 @@ def home(request):
                 goalsdifference = i['goalDifference']
             )
 
+    if 'fav_team' in request.POST:
+        if request.user.is_authenticated:
+            user = Profile.objects.get(user=request.user) # Get current user's Profile
+            if user.fav_team is None:
+                data = request.POST['fav_team'] # Gets Team object from home.html
+                fav_team = Team.objects.get(teamname=data) # Get Team object
+                user.fav_team= fav_team # Assign user's favorite team
+                user.save()
+                messages.success(request, "Fav Team added")
+                return redirect('home')
+            elif user.fav_team:
+                messages.warning(request, "You already have a Favorite Team")
+                return redirect('home')
+        else:
+            messages.warning(request, "Please login or register")
+            return redirect('login')
+
+    elif 'remove' in request.POST:
+        if request.user.is_authenticated:
+            user = Profile.objects.get(user=request.user)
+            data = request.POST['remove']
+            fav_team = Team.objects.get(teamname=data)
+            user.fav_team = None
+            user.save()
+            messages.success(request, "Fav Team Removed")
+            return redirect('home')
+
     all_stats = LeaderBoard.objects.all().order_by('position')
     all_players = Player.objects.all().order_by('-goals')
     all_teams = Team.objects.all()
-
 
     return render(request, 'teams/home.html',{'all_stats':all_stats,'all_teams':all_teams,'all_players':all_players})
 
