@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
 
     "bootstrap5",
+    "mathfilters",
 
     'rest_framework',
     'rest_framework.authtoken'

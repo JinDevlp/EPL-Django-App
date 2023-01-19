@@ -1,8 +1,8 @@
 from django.shortcuts import render
 import requests
-import uuid
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator
 from .models import Match, Score
 from teams.models import Team
 
@@ -10,6 +10,7 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 # Create your views here.
+
 def viewMatches(request):
     url = 'http://api.football-data.org/v4/competitions/PL/matches?season=2022'
     headers = { 'X-Auth-Token': env('TOKEN') }
@@ -80,6 +81,10 @@ def viewMatches(request):
             )
 
         all_scores = Score.objects.all()
-        all_matches = Match.objects.all().order_by('utcDate')
+        all_matches = Match.objects.all().order_by('-matchday')
 
-    return render(request, 'matches.html', {'all_scores':all_scores,'all_matches':all_matches})
+        paginator = Paginator(all_matches,3)
+        page = request.GET.get('page')
+        matches = paginator.get_page(page)
+
+    return render(request, 'matches.html', {'all_scores':all_scores,'all_matches':all_matches,'paginator':paginator,'page':page,'matches':matches})

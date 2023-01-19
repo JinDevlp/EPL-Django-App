@@ -1,4 +1,6 @@
-{% extends 'index.html' %} {% load static %} {% block content %}
+{% extends 'index.html' %} {% load mathfilters %} {% load static %}
+<!-- dsa -->
+{% block content %}
 <div class="content-wrap">
   <div class="main py-5">
     <div class="container-fluid py-5">
@@ -7,6 +9,7 @@
           <div class="page-header">
             <div class="page-title">
               <h1>EPL Matches Season 2022-2023</h1>
+              <p></p>
             </div>
           </div>
         </div>
@@ -27,6 +30,20 @@
       <section id="main-content">
         <div class="row justify-content-center">
           <div class="col-lg-10">
+              <nav aria-label="...">
+                <ul class="pagination">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                  </li>
+                  {{matches}}
+                  {% for i in paginator.page_range %}
+                  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                  {% endfor %}
+                  <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                </ul>
+              </nav>
             <div class="card">
               <div class="card-title text-center">
                 <h4>Matches</h4>
@@ -47,46 +64,62 @@
                     </thead>
                     <tbody>
                       {% for match in all_matches %}
+                      <!-- dsa -->
+                      {% if match.status == "FINISHED"%}
                       <!-- sda -->
                       <tr class="my-2">
                         <td>{{match.utcDate}}</td>
                         <td>{{match.status}}</td>
                         <td>{{match.matchday}}</td>
                         <td class="text-center">
-                          <h5>{{match.homeTeam.shortname}}</h5>
-                          <div class="my-3">
-                            <img
-                              class="rounded-circle"
-                              style="
-                                width: 50px;
-                                height: 50px;
-                                border-radius: 50%;
-                              "
-                              src="{{match.homeTeam.crest}}"
-                              alt="..."
-                            />
-                          </div>
+                          <a
+                            href="{% url 'team' match.homeTeam.teamnumber%}"
+                            class="text-decoration-none"
+                          >
+                            <h5>{{match.homeTeam.shortname}}</h5>
+                            <div class="my-3">
+                              <img
+                                class="rounded-circle"
+                                style="
+                                  width: 50px;
+                                  height: 50px;
+                                  border-radius: 50%;
+                                "
+                                src="{{match.homeTeam.crest}}"
+                                alt="..."
+                              />
+                            </div>
+                          </a>
                         </td>
                         <td>
-                          <h5>{{match.awayTeam.shortname}}</h5>
-                          <div class="my-3">
-                            <img
-                              class="rounded-circle"
-                              style="
-                                width: 50px;
-                                height: 50px;
-                                border-radius: 50%;
-                                position: relative;
-                                overflow: hidden;
-                              "
-                              src="{{match.awayTeam.crest}}"
-                              alt="..."
-                            />
-                          </div>
+                          <a
+                            href="{% url 'team' match.awayTeam.teamnumber%}"
+                            class="text-decoration-none"
+                          >
+                            <h5>{{match.awayTeam.shortname}}</h5>
+                            <div class="my-3">
+                              <img
+                                class="rounded-circle"
+                                style="
+                                  width: 50px;
+                                  height: 50px;
+                                  border-radius: 50%;
+                                  position: relative;
+                                  overflow: hidden;
+                                "
+                                src="{{match.awayTeam.crest}}"
+                                alt="..."
+                              />
+                            </div>
+                          </a>
                         </td>
                         <td>
-                          {% if match.final_score.winner is not None %}
-                          <h5>{{match.final_score.winner}}</h5>
+                          {% if match.final_score.winner %}
+                          <a
+                            href="{% url 'team' match.awayTeam.teamnumber%}"
+                            class="text-decoration-none"
+                          >
+                          <h5>{{match.final_score.winner.shortname}}</h5>
                           <div class="my-3">
                             <img
                               class="rounded-circle"
@@ -99,7 +132,7 @@
                               "
                               src="{{match.final_score.winner.crest}}"
                               alt="..."
-                            />
+                            /></a>
                           </div>
                           {% elif match.final_score.winner is None %}
                           <p>N/A</p>
@@ -116,9 +149,10 @@
                           {% endif %}
                         </td>
                       </tr>
-                      {% endfor %}
+                      {% endif %} {% endfor %}
                     </tbody>
                   </table>
+                  </div>
                 </div>
               </div>
             </div>

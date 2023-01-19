@@ -9,8 +9,10 @@ in progress 01/10/2023
 ![CSS3](https://img.shields.io/static/v1?style=for-the-badge&message=CSS3&color=1572B6&logo=CSS3&logoColor=FFFFFF&label=)
 ![Bootstrap](https://img.shields.io/static/v1?style=for-the-badge&message=Bootstrap&color=7952B3&logo=Bootstrap&logoColor=FFFFFF&label=)
 
-<img src="https://drive.google.com/uc?export=view&id=1Ja0kDFlFVkaOUeVWXRe4xdPieUBcrqmy" width="50%" height="50%" />
-<img src="https://drive.google.com/uc?export=view&id=1KYuaB0yi5Wf-4LvCkX0stImbMQXS5QHy" width="50%" height="50%" />
+<p float="left">
+<img src="https://drive.google.com/uc?export=view&id=1Ja0kDFlFVkaOUeVWXRe4xdPieUBcrqmy" width="40%" height="40%" />
+<img src="https://drive.google.com/uc?export=view&id=1KYuaB0yi5Wf-4LvCkX0stImbMQXS5QHy" width="40%" height="40%" />
+</p>
 
 ## What is it?
 
@@ -23,10 +25,8 @@ in progress 01/10/2023
 ## Functionality
 
 - Django Web Application
-- Django REST API
-- API
-- (MODEL OBJECTS) -Serialization-> (PYTHON DICTIONARY) -Render into Json-> (JSON DATA)
-- (JSON DATA) -ParseData-> (PYTHON NATIVE DATATYPE) -DeSerialization-> (COMPLEX DATATYPE)
+- Django Rest Framework
+- Restful API
 
 ```
   "GET": "/api/teams"
@@ -37,7 +37,24 @@ in progress 01/10/2023
   "GET": "/api/top-scorer"
   "GET": "/api/players"
   "GET": "/api/players/code"
+  "POST": "/api/profiles/id/favteam/add/"
+  "PATCH": "/api/profiles/id/favteam/remove/"
 ```
+
+## Postman
+
+<p float="left">
+<h5><img src="https://drive.google.com/uc?export=view&id=1Q-u-8Fjhpv61b5PumAxIW6KLcyqT_6Ox" width="40%" height="50%" />
+['GET']Get all EPL teams in DB</h5>
+<h5><img src="https://drive.google.com/uc?export=view&id=1kJPKet_0MaufOAokeGFQI5bzq2DsbP2x" width="40%" height="50%" />
+['GET']Get a specific Team by Teamnumber (Tottenham Hotspur)</h5>
+<h5><img src="https://drive.google.com/uc?export=view&id=1UOTUZvEJt1Lc02xBnfENNIwZYCD7LUY6" width="40%" height="50%" />
+['GET']Access to information denied due to Authentication failure</h5>
+<h5><img src="https://drive.google.com/uc?export=view&id=12pAWbmd6L7fAv5FZvZBg4BR1brp8v8W0" width="40%" height="50%" />
+['POST']Add Profile's Favorite Team by Team number</h5>
+<h5><img src="https://drive.google.com/uc?export=view&id=1OMsUP4cd_jPr8DeixfQYveoWhvF73nV2" width="40%" height="50%" />
+['PATCH']Remove Profile's Favorite Team</h5>
+</p>
 
 ## Problems I faced
 

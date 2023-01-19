@@ -14,11 +14,13 @@ urlpatterns = [
 
     path('matches/', views.viewMatches),
     path('matches/<str:pk>', views.viewMatch),
+    path('matches/<str:pk>/scores', views.viewMatchScores),
+    path('matches/matchdays/<str:pk>', views.matchDay),
 
     path('profiles/', views.viewProfiles),
     path('profiles/<str:pk>', views.viewProfile),
 
     path('profiles/<str:pk>/favteam/add/',views.addFavTeam),
-
+    path('profiles/<str:pk>/favteam/remove/',views.removeFavTeam),
 ]
 
