@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.getRoutes),
-    path('teams/', views.viewTeams, name='teamsAPI' ),
+    path('teams/', views.TeamsList.as_view(), name='teamsAPI' ),
     path('teams/<str:pk>',views.viewTeam,name='teamAPI'),
 
     path('leaderboard/', views.viewBoard),
@@ -13,6 +13,7 @@ urlpatterns = [
     path('players/<str:pk>', views.viewPlayer ),
 
     path('matches/', views.viewMatches),
+    path('matches/days/<str:day>', views.viewMatch),
     path('matches/<str:pk>', views.viewMatch),
     path('matches/<str:pk>/scores', views.viewMatchScores),
     path('matches/matchdays/<str:pk>', views.matchDay),

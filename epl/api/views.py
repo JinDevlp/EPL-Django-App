@@ -6,6 +6,7 @@ from teams.models import Team, LeaderBoard
 from user.models import Profile
 from player.models import Player
 from match.models import Match, Score
+from rest_framework.views import APIView
 from .serializers import TeamSerializer,TeamInfoSerializer,PlayerSerializer, LeaderBoardSerializer, TopScorerSerializer,MatchSerializer, ProfileSerializer, ScoreSerializer
 
 @api_view(['GET'])
@@ -48,12 +49,12 @@ def viewProfile(request,pk):
     profile_serializer = ProfileSerializer(profile,many=False)
     return Response(profile_serializer.data)
 
-@api_view(['GET'])
-def viewTeams(request):
-    all_teams = Team.objects.all()
+class TeamsList(APIView):
+    def viewTeams(request):
+        all_teams = Team.objects.all()
 
-    team_serializer = TeamSerializer(all_teams,many=True)
-    return Response(team_serializer.data)
+        team_serializer = TeamSerializer(all_teams,many=True)
+        return Response(team_serializer.data)
 
 @api_view(['GET'])
 def viewTeam(request,pk):

@@ -4,17 +4,6 @@
 <div class="content-wrap">
   <div class="main py-5">
     <div class="container-fluid py-5">
-      <div class="row">
-        <div class="col-lg-10 p-r-0 text-center">
-          <div class="page-header">
-            <div class="page-title">
-              <h1>EPL Matches Season 2022-2023</h1>
-              <p></p>
-            </div>
-          </div>
-        </div>
-
-      </div>
       <div class="container px-4 px-lg-5 mt-2">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
           {% for i in count %}
@@ -31,13 +20,38 @@
             {% endfor %}
           </div>
       </div>
-
+      <div class="row">
+        <div class="col-lg-10 p-r-0">
+          <div class="page-header">
+            <div class="page-title text-center">
+              <h1>Matchday {{data}}</h1>
+              {% for game in matchObj %}
+              {% if game.status == 'FINISHED'%}
+              {% if forloop.first%}
+              <p>FINISHED</p>
+              {% endif %}
+              {% endif %}
+              {% if game.status == 'SCHEDULED'%}
+              {% if forloop.first%}
+              <p>Check Back for Schedule</p>
+              {% endif %}
+              {% endif %}
+              {% if game.status == 'TIMED'%}
+              {% if forloop.first%}
+              <p>SCHEDULED</p>
+              {% endif %}
+              {% endif %}
+              {% endfor %}
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- /# row -->
       <section id="main-content">
         <div class="row justify-content-center">
-          <div class="col-lg-10">
+          <div class="col-lg-10 text-center">
             <div class="card">
-              Matchday
               <!-- {% include 'pagination.html' %} -->
               <div class="card-title text-center">
                 <h4>Matches</h4>
@@ -57,7 +71,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {% for match in all_matches %}
+                      {% for match in matchObj %}
                       <!-- dsa -->
                       <!-- sda -->
                       <tr class="my-2">
