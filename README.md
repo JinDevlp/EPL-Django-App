@@ -29,14 +29,24 @@ in progress 01/10/2023
 - Restful API
 
 ```
+  (only admin can view profiles)
+  "GET": "/api/profiles",
+  "GET": "/api/profiles/id",
+
   "GET": "/api/teams"
   "GET": "/api/teams/teamnumber"
+
   "GET": "/api/matches"
-  "GET": "/api/matches/code"
+  "GET": "/api/matches/matchdays/matchday"
+  "GET": "/api/matches/matchcode"
+  "GET": "/api/matches/matchcode/scores"
+
   "GET": "/api/leaderboard"
   "GET": "/api/top-scorer"
+
   "GET": "/api/players"
-  "GET": "/api/players/code"
+  "GET": "/api/players/playercode"
+
   "POST": "/api/profiles/id/favteam/add/"
   "PATCH": "/api/profiles/id/favteam/remove/"
 ```

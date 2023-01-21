@@ -1,13 +1,18 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import permissions
+from rest_framework.generics import CreateAPIView
+from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAdminOrReadOnly
 from teams.models import Team, LeaderBoard
 from user.models import Profile
 from player.models import Player
 from match.models import Match, Score
 from rest_framework.views import APIView
-from .serializers import TeamSerializer,TeamInfoSerializer,PlayerSerializer, LeaderBoardSerializer, TopScorerSerializer,MatchSerializer, ProfileSerializer, ScoreSerializer
+from django.http import Http404
+from .serializers import TeamSerializer,TeamInfoSerializer,PlayerSerializer, LeaderBoardSerializer, TopScorerSerializer,UserSerializer,MatchSerializer, ProfileSerializer, ScoreSerializer
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -35,33 +40,55 @@ def getRoutes(request):
     ]
     return Response(routes)
 
-@api_view(['GET'])
-def viewProfiles(request):
-    profiles = Profile.objects.all()
+class CreateUserView(CreateAPIView):
+    model = get_user_model()
+    permission_classes = [
+        permissions.AllowAny # Or anon users can't register
+    ]
+    serializer_class = UserSerializer()
 
-    profile_serializer = ProfileSerializer(profiles,many=True)
-    return Response(profile_serializer.data)
+class ProfileList(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    def get(self,request):
+        if request.user.is_staff:
+            profiles = Profile.objects.all()
 
-@api_view(['GET'])
-def viewProfile(request,pk):
-    profile = Profile.objects.get(id=pk)
+            profile_serializer = ProfileSerializer(profiles,many=True)
+            return Response(profile_serializer.data)
+        else:
+            return Response("You are not admin", status = status.HTTP_400_BAD_REQUEST)
 
-    profile_serializer = ProfileSerializer(profile,many=False)
-    return Response(profile_serializer.data)
+class ProfileDetail(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    def get_object(self,pk):
+        try:
+            return Profile.objects.get(id=pk)
+        except Profile.DoesNotExist:
+            raise Http404
+
+    def get(self,request, pk):
+        profile = self.get_object(pk)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
 
 class TeamsList(APIView):
-    def viewTeams(request):
+    def get(self,request):
         all_teams = Team.objects.all()
 
         team_serializer = TeamSerializer(all_teams,many=True)
         return Response(team_serializer.data)
 
-@api_view(['GET'])
-def viewTeam(request,pk):
-    team = Team.objects.get(teamnumber=pk)
-    team_serializer = TeamInfoSerializer(team,many=False)
+class TeamsDetail(APIView):
+    def get_object(self,pk): # Get Team object
+        try:
+            return Team.objects.get(teamnumber=pk)
+        except Team.DoesNotExist:
+            raise Http404
 
-    return Response(team_serializer.data)
+    def get(self,request, pk,format=None): # Returns Team info with players
+        team = self.get_object(pk)
+        team_serializer = TeamInfoSerializer(team)
+        return Response(team_serializer.data)
 
 @api_view(['GET'])
 def viewPlayers(request):
@@ -117,7 +144,7 @@ def viewMatchScores(request,pk):
     serializer = ScoreSerializer(score,many=False)
     return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def addFavTeam(request,pk):
    profile = Profile.objects.get(id=pk)
