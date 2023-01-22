@@ -19,48 +19,105 @@ def viewMatches(request):
     matches_list = matches_json['matches']
 
     for i in matches_list:
-        if i['score']['winner']== 'HOME_TEAM':
-            Score.objects.update_or_create(
+        if i['score']['winner'] == "HOME_TEAM":
+            score_data = Score(
                 matchid = i['id'],
-                defaults= {'winner':Team.objects.get(teamnumber=i['homeTeam']['id'])},
+                winner = Team.objects.get(teamnumber=i['homeTeam']['id']),
                 fulltime_home = i['score']['fullTime']['home'],
                 fulltime_away = i['score']['fullTime']['away'],
                 halftime_home = i['score']['halfTime']['home'],
-                halftime_away =i['score']['halfTime']['away']
-            )
-
-        elif i['score']['winner']== 'AWAY_TEAM':
-            Score.objects.update_or_create(
-            matchid = i['id'],
-            defaults= {'winner':Team.objects.get(teamnumber=i['awayTeam']['id'])},
-            fulltime_home = i['score']['fullTime']['home'],
-            fulltime_away = i['score']['fullTime']['away'],
-            halftime_home = i['score']['halfTime']['home'],
-            halftime_away =i['score']['halfTime']['away']
-            )
+                halftime_away =i['score']['halfTime']['away'],)
+            if not Score.objects.filter(matchid=score_data.matchid).exists():
+                score_data.save()
+        if i['score']['winner'] == "AWAY_TEAM":
+            score_data = Score(
+                matchid = i['id'],
+                winner = Team.objects.get(teamnumber=i['awayTeam']['id']),
+                fulltime_home = i['score']['fullTime']['home'],
+                fulltime_away = i['score']['fullTime']['away'],
+                halftime_home = i['score']['halfTime']['home'],
+                halftime_away =i['score']['halfTime']['away'],)
+            if not Score.objects.filter(matchid=score_data.matchid).exists():
+                score_data.save()
         else:
-            Score.objects.update_or_create(
-            matchid = i['id'],
-            winner = None,
-            defaults={
-            'fulltime_home' : i['score']['fullTime']['home'],
-            'fulltime_away': i['score']['fullTime']['away'],
-            'halftime_home' : i['score']['halfTime']['home'],
-            'halftime_away' :i['score']['halfTime']['away']
-            }
-            )
-
-        Match.objects.update_or_create(
+            score_data = Score(
+                matchid = i['id'],
+                winner = None,
+                fulltime_home = i['score']['fullTime']['home'],
+                fulltime_away = i['score']['fullTime']['away'],
+                halftime_home = i['score']['halfTime']['home'],
+                halftime_away =i['score']['halfTime']['away'],)
+            if not Score.objects.filter(matchid=score_data.matchid).exists():
+                score_data.save()
+            if Score.objects.filter(matchid=score_data.matchid).exists() and i['score']['winner'] == "HOME_TEAM":
+                Score.objects.filter(matchid=score_data.matchid).update(
+                winner = Team.objects.get(teamnumber=i['homeTeam']['id']),
+                fulltime_home = i['score']['fullTime']['home'],
+                fulltime_away = i['score']['fullTime']['away'],
+                halftime_home = i['score']['halfTime']['home'],
+                halftime_away =i['score']['halfTime']['away'],
+                )
+            if Score.objects.filter(matchid=score_data.matchid).exists() and i['score']['winner'] == "AWAY_TEAM":
+                Score.objects.filter(matchid=score_data.matchid).update(
+                winner = Team.objects.get(teamnumber=i['awayTeam']['id']),
+                fulltime_home = i['score']['fullTime']['home'],
+                fulltime_away = i['score']['fullTime']['away'],
+                halftime_home = i['score']['halfTime']['home'],
+                halftime_away =i['score']['halfTime']['away'],)
+        # if i['score']['winner']== 'HOME_TEAM':
+        #     Score.objects.update_or_create(
+        #         matchid = i['id'],
+        #         defaults= {'winner':Team.objects.get(teamnumber=i['homeTeam']['id'])},
+        #         fulltime_home = i['score']['fullTime']['home'],
+        #         fulltime_away = i['score']['fullTime']['away'],
+        #         halftime_home = i['score']['halfTime']['home'],
+        #         halftime_away =i['score']['halfTime']['away']
+        #     )
+        # elif i['score']['winner']== 'AWAY_TEAM':
+        #     Score.objects.update_or_create(
+        #     matchid = i['id'],
+        #     defaults= {'winner':Team.objects.get(teamnumber=i['awayTeam']['id'])},
+        #     fulltime_home = i['score']['fullTime']['home'],
+        #     fulltime_away = i['score']['fullTime']['away'],
+        #     halftime_home = i['score']['halfTime']['home'],
+        #     halftime_away =i['score']['halfTime']['away']
+        #     )
+        # else:
+        #     Score.objects.update_or_create(
+        #     matchid = i['id'],
+        #     winner = None,
+        #     defaults={
+        #     'fulltime_home' : i['score']['fullTime']['home'],
+        #     'fulltime_away': i['score']['fullTime']['away'],
+        #     'halftime_home' : i['score']['halfTime']['home'],
+        #     'halftime_away' :i['score']['halfTime']['away']
+        #     }
+        #     )
+        match_data = Match(
             code = i['id'],
-            defaults={
-            'final_score' : Score.objects.get(matchid = i['id']),
-            'utcDate' : i['utcDate'],
-            'status' : i['status'],
-            'matchday' : i['matchday'],
-            'homeTeam' : Team.objects.get(teamnumber=i['homeTeam']['id'] ),
-            'awayTeam' : Team.objects.get(teamnumber=i['awayTeam']['id'] ),
-                }
-            )
+            final_score = Score.objects.get(matchid = i['id']),
+            utcDate = i['utcDate'],
+            status = i['status'],
+            matchday = i['matchday'],
+            homeTeam =  Team.objects.get(teamnumber=i['homeTeam']['id'] ),
+            awayTeam = Team.objects.get(teamnumber=i['awayTeam']['id'] ),
+        )
+        if not Match.objects.filter(code=match_data.code).exists():
+            match_data.save()
+        if Match.objects.filter(code=match_data.code).exists():
+            Match.objects.filter(code=match_data.code).update()
+
+        # Match.objects.update_or_create(
+        #     code = i['id'],
+        #     defaults={
+        #     'final_score' : Score.objects.get(matchid = i['id']),
+        #     'utcDate' : i['utcDate'],
+        #     'status' : i['status'],
+        #     'matchday' : i['matchday'],
+        #     'homeTeam' : Team.objects.get(teamnumber=i['homeTeam']['id'] ),
+        #     'awayTeam' : Team.objects.get(teamnumber=i['awayTeam']['id'] ),
+        #         }
+        #     )
         all_scores = Score.objects.all()
         all_matches = Match.objects.all().order_by('-matchday')
 
@@ -69,7 +126,6 @@ def viewMatches(request):
 def vieMatch(request,day):
     if 'day' in request.POST:
         data = request.POST['day']
-        print(data)
         matchObj = Match.objects.filter(matchday=data)
 
     all_matches = Match.objects.all()
