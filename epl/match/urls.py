@@ -3,6 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.viewMatches, name='matches' ),
-    path('days/<str:day>', views.vieMatch, name='matchByDay'),
+    path('days/<str:day>', views.viewMatch, name='matchByDay'),
 ]
 

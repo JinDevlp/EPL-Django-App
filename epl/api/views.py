@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrReadOnly
@@ -72,6 +73,7 @@ class ProfileDetail(APIView):
         return Response(serializer.data)
 
 class TeamsList(APIView):
+    permission_classes =(IsAuthenticated,)
     def get(self,request):
         all_teams = Team.objects.all()
 
