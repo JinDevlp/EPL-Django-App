@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+
 from teams.models import Team, LeaderBoard
 from player.models import Player
 from match.models import Match, Score
@@ -31,11 +32,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'email', 'username', 'password']
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
-    fav_team = TeamSerializer(many=False)
+    user = UserSerializer(many=False,required=False)
+    team = TeamSerializer(many=False,required=False)
+    fav_team = serializers.SerializerMethodField()
     class Meta:
         model = Profile
         fields = '__all__'
+
+    def get_fav_team(self,obj):
+        team = obj.fav_team_set.all()
+        serializer = TeamSerializer(team,many=False)
+        return serializer.data
 
 class PlayerSerializer(serializers.ModelSerializer):
     team = TeamSerializer(many=False)

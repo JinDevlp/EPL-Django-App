@@ -11,21 +11,19 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    path('teams', views.TeamsList.as_view(), name='teamsAPI' ),
+    path('teams', views.TeamsList.as_view(), name='teamsAPI'),
     path('teams/<str:pk>',views.TeamsDetail.as_view(),name='teamAPI'),
 
     path('register/',views.CreateUserView.as_view()),
 
-    path('leaderboard/', views.viewBoard),
-    path('top-scorer/', views.viewTopScorers ),
+    path('leaderboard', views.LeaderboardList.as_view()),
+    path('top-scorer', views.TopScorerList.as_view() ),
 
-    path('players', views.viewPlayers ),
-    path('players/<str:pk>', views.viewPlayer ),
+    path('players', views.PlayersList.as_view() ),
+    path('players/<str:pk>', views.PlayersDetail.as_view() ),
 
-    path('matches', views.viewMatches),
-    path('matches/days/<str:day>', views.viewMatch),
-    path('matches/<str:pk>', views.viewMatch),
-    path('matches/<str:pk>/scores', views.viewMatchScores),
+    path('matches', views.MatchesList.as_view()),
+    path('matches/<str:pk>', views.MatchDetail.as_view()),
     path('matches/matchdays/<str:pk>', views.matchDay),
 
     path('profiles/', views.ProfileList.as_view()),

@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
+from rest_framework import mixins, generics
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
@@ -48,39 +49,28 @@ class CreateUserView(CreateAPIView):
     ]
     serializer_class = UserSerializer()
 
-class ProfileList(APIView):
-    permission_classes = [IsAdminOrReadOnly]
-    def get(self,request):
-        if request.user.is_staff:
-            profiles = Profile.objects.all()
+class ProfileList(generics.ListAPIView
+                    ):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
-            profile_serializer = ProfileSerializer(profiles,many=True)
-            return Response(profile_serializer.data)
-        else:
-            return Response("You are not admin", status = status.HTTP_400_BAD_REQUEST)
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAdminOrReadOnly,)
 
-class ProfileDetail(APIView):
-    permission_classes = [IsAdminOrReadOnly]
-    def get_object(self,pk):
-        try:
-            return Profile.objects.get(id=pk)
-        except Profile.DoesNotExist:
-            raise Http404
+class TeamsList(generics.ListCreateAPIView):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
 
-    def get(self,request, pk):
-        profile = self.get_object(pk)
-        serializer = ProfileSerializer(profile)
-        return Response(serializer.data)
+# ID as pk
+class TeamsDetail(generics.RetrieveAPIView):
+    queryset = Team.objects.all()
+    serializer_class = TeamInfoSerializer # Returns Team Info with Players Info
 
-class TeamsList(APIView):
-    permission_classes =(IsAuthenticated,)
-    def get(self,request):
-        all_teams = Team.objects.all()
-
-        team_serializer = TeamSerializer(all_teams,many=True)
-        return Response(team_serializer.data)
-
-class TeamsDetail(APIView):
+# If want to use Teamnumber as pk
+"""class TeamsDetail(APIView):
     def get_object(self,pk): # Get Team object
         try:
             return Team.objects.get(teamnumber=pk)
@@ -90,60 +80,37 @@ class TeamsDetail(APIView):
     def get(self,request, pk,format=None): # Returns Team info with players
         team = self.get_object(pk)
         team_serializer = TeamInfoSerializer(team)
-        return Response(team_serializer.data)
+        return Response(team_serializer.data)"""
 
-@api_view(['GET'])
-def viewPlayers(request):
-    players = Player.objects.all()
-    serializer = PlayerSerializer(players,many=True)
+class MatchesList(generics.ListCreateAPIView):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
 
-    return Response(serializer.data)
+class MatchDetail(generics.RetrieveAPIView):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer # Returns Match Info with Score Info
 
-@api_view(['GET'])
-def viewPlayer(request,pk):
-    player = Player.objects.get(code=pk)
-    serializer = PlayerSerializer(player,many=False)
-    return Response(serializer.data)
+class PlayersList(generics.ListCreateAPIView):
+    queryset = Player.objects.all()
+    serializer_class = PlayerSerializer
 
-@api_view(['GET'])
-def viewBoard(request):
-    leader_board = LeaderBoard.objects.all()
-    serializer = LeaderBoardSerializer(leader_board,many=True)
+class PlayersDetail(generics.RetrieveAPIView):
+    queryset = Player.objects.all()
+    serializer_class = PlayerSerializer
 
-    return Response(serializer.data)
+class LeaderboardList(generics.ListCreateAPIView):
+    queryset = LeaderBoard.objects.all()
+    serializer_class = LeaderBoardSerializer
 
-@api_view(['GET'])
-def viewTopScorers(request):
-    top_scorer = Player.objects.filter(top_scorer=True)
-    serializer = TopScorerSerializer(top_scorer,many=True)
-
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def viewMatches(request):
-    matches = Match.objects.all()
-    serializer = MatchSerializer(matches,many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def viewMatch(request,pk):
-    match = Match.objects.get(code=pk)
-    serializer = MatchSerializer(match,many=False)
-    return Response(serializer.data)
+class TopScorerList(generics.ListCreateAPIView):
+    queryset = Player.objects.filter(top_scorer=True)
+    serializer_class = TopScorerSerializer
 
 @api_view(['GET'])
 def matchDay(request,pk):
     matches = Match.objects.filter(matchday=pk)
 
     serializer = MatchSerializer(matches,many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def viewMatchScores(request,pk):
-    match = Match.objects.get(code=pk) #Get Single Match obj with Match code
-    score = Score.objects.get(matchid=match.code) # Get Score obj from that Match obj
-
-    serializer = ScoreSerializer(score,many=False)
     return Response(serializer.data)
 
 @api_view(['PUT'])
@@ -153,7 +120,7 @@ def addFavTeam(request,pk):
    profile_serializer = ProfileSerializer(profile,many=False)
 
    data = request.data
-   team = Team.objects.get(teamnumber= data['fav_team']) # Get Team Object according to teamname
+   team = Team.objects.get(id= data['fav_team']) # Get Team Object according to teamname
    if profile.fav_team == None:
        profile.fav_team = team
        profile.save()
@@ -162,7 +129,7 @@ def addFavTeam(request,pk):
 
    return Response(profile_serializer.data, status= status.HTTP_202_ACCEPTED)
 
-@api_view(['PATCH'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def removeFavTeam(request,pk):
    profile = Profile.objects.get(id=pk)

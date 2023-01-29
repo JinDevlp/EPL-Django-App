@@ -14,5 +14,8 @@ class Player(models.Model):
     penalties = models.IntegerField( blank=True, null=True )
     top_scorer = models.BooleanField(default=False, blank=True, null=True )
 
+    class Meta:
+        ordering = ['-goals']
+
     def __str__(self):
         return self.name
