@@ -60,8 +60,6 @@ def register(request):
             user.username = user.username.lower()
 
             user.save()
-            user_token = Token.objects.create(user=user)
-            print(user_token.key)
             messages.success(request, 'User created')
 
             auth_login(request, user)

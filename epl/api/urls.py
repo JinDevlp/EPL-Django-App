@@ -14,7 +14,6 @@ urlpatterns = [
     path('teams', views.TeamsList.as_view(), name='teamsAPI'),
     path('teams/<str:pk>',views.TeamsDetail.as_view(),name='teamAPI'),
 
-    path('register/',views.CreateUserView.as_view()),
 
     path('leaderboard', views.LeaderboardList.as_view()),
     path('top-scorer', views.TopScorerList.as_view() ),
@@ -26,10 +25,10 @@ urlpatterns = [
     path('matches/<str:pk>', views.MatchDetail.as_view()),
     path('matches/matchdays/<str:pk>', views.matchDay),
 
-    path('profiles/', views.ProfileList.as_view()),
+    path('profiles', views.ProfileList.as_view()),
     path('profiles/<str:pk>', views.ProfileDetail.as_view()),
+    path('users', views.UserList.as_view()),
+    path('users/<str:pk>', views.UserDetail.as_view()),
 
-    path('profiles/<str:pk>/favteam/add/',views.addFavTeam),
-    path('profiles/<str:pk>/favteam/remove/',views.removeFavTeam),
 ]
 

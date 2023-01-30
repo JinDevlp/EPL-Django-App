@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
@@ -16,36 +17,39 @@ class TeamSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
-    def create(self, validated_data):
-
-        user = User.objects.create_user(
-            first_name=validated_data['first_name'],
-            email=validated_data['email'],
-            username=validated_data['username'],
-            password=validated_data['password'],
-        )
-
-        return user
-
     class Meta:
         model = User
-        fields = ['first_name', 'email', 'username', 'password']
+        fields = '__all__'
+
+    def validate_password(self, value: str) -> str:
+        """
+        Hash value passed by user.
+
+        :param value: password of a user
+        :return: a hashed version of the password
+        """
+        return make_password(value)
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False,required=False)
     team = TeamSerializer(many=False,required=False)
-    fav_team = serializers.SerializerMethodField()
+
     class Meta:
         model = Profile
         fields = '__all__'
 
-    def get_fav_team(self,obj):
-        team = obj.fav_team_set.all()
-        serializer = TeamSerializer(team,many=False)
-        return serializer.data
+class UserDetailSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False,required=False)
+    profile = ProfileSerializer(many=False,required=False)
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = '__all__'
 
 class PlayerSerializer(serializers.ModelSerializer):
     team = TeamSerializer(many=False)
+
     class Meta:
         model = Player
         fields = '__all__'

@@ -9,56 +9,34 @@ from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminOrReadOnly
 from teams.models import Team, LeaderBoard
+from django.contrib.auth.models import User
 from user.models import Profile
 from player.models import Player
 from match.models import Match, Score
 from rest_framework.views import APIView
 from django.http import Http404
-from .serializers import TeamSerializer,TeamInfoSerializer,PlayerSerializer, LeaderBoardSerializer, TopScorerSerializer,UserSerializer,MatchSerializer, ProfileSerializer, ScoreSerializer
+from .serializers import TeamSerializer,TeamInfoSerializer,PlayerSerializer, LeaderBoardSerializer, TopScorerSerializer,UserSerializer,MatchSerializer, ProfileSerializer, ScoreSerializer,UserDetailSerializer
 
-@api_view(['GET'])
-def getRoutes(request):
-    routes = [
-        {'GET': '/api/teams'},
-        {'GET': '/api/teams/teamnumber'},
+class UserList(generics.ListCreateAPIView):
+    permission_classes =(IsAdminOrReadOnly,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-        {'GET': '/api/matches'},
-        {'GET': '/api/matches/matchdays/matchday'},
-        {'GET': '/api/matches/matchcode'},
-        {'GET': '/api/matches/matchcode/scores'},
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes =(IsAdminOrReadOnly,)
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
 
-        {'GET': '/api/leaderboard'},
-        {'GET': '/api/top-scorer'},
-
-        {'GET': '/api/players'},
-        {'GET': '/api/players/playercode'},
-
-        {'GET': '/api/profiles'},
-        {'GET': '/api/profiles/id'},
-
-        {'POST': '/api/profiles/id/teams/teamnumber/add'},
-        {'PATCH': '/api/profiles/id/teams/teamnumber/remove'},
-
-    ]
-    return Response(routes)
-
-class CreateUserView(CreateAPIView):
-    model = get_user_model()
-    permission_classes = [
-        permissions.AllowAny # Or anon users can't register
-    ]
-    serializer_class = UserSerializer()
-
-class ProfileList(generics.ListAPIView
+class ProfileList(generics.ListCreateAPIView
                     ):
+    permission_classes = (IsAdminOrReadOnly,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (IsAdminOrReadOnly,)
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAdminOrReadOnly,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (IsAdminOrReadOnly,)
 
 class TeamsList(generics.ListCreateAPIView):
     queryset = Team.objects.all()
@@ -90,6 +68,14 @@ class MatchDetail(generics.RetrieveAPIView):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer # Returns Match Info with Score Info
 
+# Get match by Matchday
+@api_view(['GET'])
+def matchDay(request,pk):
+    matches = Match.objects.filter(matchday=pk)
+
+    serializer = MatchSerializer(matches,many=True)
+    return Response(serializer.data)
+
 class PlayersList(generics.ListCreateAPIView):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
@@ -107,40 +93,58 @@ class TopScorerList(generics.ListCreateAPIView):
     serializer_class = TopScorerSerializer
 
 @api_view(['GET'])
-def matchDay(request,pk):
-    matches = Match.objects.filter(matchday=pk)
+def getRoutes(request):
+    routes = [
+        {'GET': '/api/teams'},
+        {'GET': '/api/teams/teamnumber'},
 
-    serializer = MatchSerializer(matches,many=True)
-    return Response(serializer.data)
+        {'GET': '/api/matches'},
+        {'GET': '/api/matches/matchdays/matchday'},
+        {'GET': '/api/matches/matchcode'},
+        {'GET': '/api/matches/matchcode/scores'},
 
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def addFavTeam(request,pk):
-   profile = Profile.objects.get(id=pk)
-   profile_serializer = ProfileSerializer(profile,many=False)
+        {'GET': '/api/leaderboard'},
+        {'GET': '/api/top-scorer'},
 
-   data = request.data
-   team = Team.objects.get(id= data['fav_team']) # Get Team Object according to teamname
-   if profile.fav_team == None:
-       profile.fav_team = team
-       profile.save()
-   else:
-       return Response("You already have a favorite team", status = status.HTTP_400_BAD_REQUEST)
+        {'GET': '/api/players'},
+        {'GET': '/api/players/playercode'},
 
-   return Response(profile_serializer.data, status= status.HTTP_202_ACCEPTED)
+        {'GET': '/api/profiles'},
+        {'GET': '/api/profiles/id'},
 
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def removeFavTeam(request,pk):
-   profile = Profile.objects.get(id=pk)
-   profile_serializer = ProfileSerializer(profile,many=False)
+        {'POST': '/api/profiles/id/teams/teamnumber/add'},
+        {'PATCH': '/api/profiles/id/teams/teamnumber/remove'},
 
-   if profile.fav_team:
-       profile.fav_team = None
-       profile.save()
-   else:
-       return Response("You don't have a favorite team", status = status.HTTP_400_BAD_REQUEST)
+    ]
+    return Response(routes)
+
+# @api_view(['PUT'])
+# @permission_classes([IsAuthenticated])
+# def addFavTeam(request,pk):
+#    profile = Profile.objects.get(id=pk)
+#    profile_serializer = ProfileSerializer(profile,many=False)
+
+#    data = request.data
+#    team = Team.objects.get(id= data['fav_team']) # Get Team Object according to teamname
+#    if profile.fav_team == None:
+#        profile.fav_team = team
+#        profile.save()
+#    else:
+#        return Response("You already have a favorite team", status = status.HTTP_400_BAD_REQUEST)
+
+#    return Response(profile_serializer.data, status= status.HTTP_202_ACCEPTED)
+
+# @api_view(['DELETE'])
+# @permission_classes([IsAuthenticated])
+# def removeFavTeam(request,pk):
+#    profile = Profile.objects.get(id=pk)
+#    profile_serializer = ProfileSerializer(profile,many=False)
+
+#    if profile.fav_team:
+#        profile.fav_team = None
+#        profile.save()
+#    else:
+#        return Response("You don't have a favorite team", status = status.HTTP_400_BAD_REQUEST)
 
 
-   return Response(profile_serializer.data, status= status.HTTP_202_ACCEPTED)
-
+#    return Response(profile_serializer.data, status= status.HTTP_202_ACCEPTED)
