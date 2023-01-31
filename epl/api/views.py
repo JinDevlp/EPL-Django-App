@@ -27,13 +27,13 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
 
-class ProfileList(generics.ListCreateAPIView
+class ProfileList(generics.ListAPIView
                     ):
     permission_classes = (IsAdminOrReadOnly,)
-    queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
 
-class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+class ProfileDetail(generics.RetrieveAPIView):
     permission_classes = (IsAdminOrReadOnly,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer

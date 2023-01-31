@@ -29,26 +29,27 @@ in progress 01/10/2023
 - Restful API
 
 ```
-  (only admin can view profiles)
-  "GET": "/api/profiles",
-  "GET": "/api/profiles/id",
+  (only admin can edit users)
+  "GET": "/users"
+  "POST": "/users"
+  "PUT": "/users/id"
+  "DELETE": "/users/id"
 
-  "GET": "/api/teams"
-  "GET": "/api/teams/teamnumber"
+  "GET": "/profiles"
+  "GET": "/profiles/id"
 
-  "GET": "/api/matches"
-  "GET": "/api/matches/matchdays/matchday"
-  "GET": "/api/matches/matchcode"
-  "GET": "/api/matches/matchcode/scores"
+  "GET": "/teams"
+  "GET": "/teams/id"
 
-  "GET": "/api/leaderboard"
-  "GET": "/api/top-scorer"
+  "GET": "/players"
+  "GET": "/players/id"
 
-  "GET": "/api/players"
-  "GET": "/api/players/playercode"
+  "GET": "/leaderboard"
+  "GET": "/top-scorer"
 
-  "POST": "/api/profiles/id/favteam/add/"
-  "PATCH": "/api/profiles/id/favteam/remove/"
+  "GET": "/matches"
+  "GET": "/matches/id"
+  "GET": "/matches/matchdays/matchday"
 ```
 
 ## Postman

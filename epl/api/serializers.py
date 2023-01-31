@@ -39,7 +39,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False,required=False)
     profile = ProfileSerializer(many=False,required=False)
     password = serializers.CharField(write_only=True)
 
